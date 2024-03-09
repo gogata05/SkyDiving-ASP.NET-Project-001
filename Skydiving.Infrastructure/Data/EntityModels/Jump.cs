@@ -49,9 +49,12 @@ namespace Skydiving.Infrastructure.Data.EntityModels
 
         public DateTime? EndDate { get; set; }
 
+        public IEnumerable<JumpOffer> JumpsOffers { get; set; } = new List<JumpOffer>();
+
         [Required]
         public int JumpStatusId { get; set; } = 1;
 
-
+        [ForeignKey(nameof(JumpStatusId))]
+        public JumpStatus JumpStatus { get; set; } = null!;
     }
 }
