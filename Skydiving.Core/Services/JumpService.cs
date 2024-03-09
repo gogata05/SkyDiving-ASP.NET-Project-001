@@ -121,11 +121,68 @@ namespace Skydiving.Core.Services
             await repo.SaveChangesAsync();
         }
 
+        public async Task<JumpViewModel> JumpDetailsAsync(int id)
+        {
+            if (!await JumpExistAsync(id))
+            {
+                throw new Exception("Jump not found");
+            }
+
+            var jump = await repo.AllReadonly<Jump>()
+                .Where(j => j.Id == id)
+                .Include(c => c.Category)
+                .FirstAsync();
+
+
+            var model = new JumpViewModel()
+            {
+                OwnerId = jump.OwnerId,
+                OwnerName = jump.OwnerName,
+                Title = jump.Title,
+                Description = jump.Description,
+                Category = jump.Category.Name,
+                Id = jump.Id
+            };
+
+            return model;
+
+        }
+
         public async Task<bool> JumpExistAsync(int id)
         {
             var result = await repo.AllReadonly<Jump>().Where(x => x.Id == id).AnyAsync();
 
             return result;
+        }
+
+        public async Task<IEnumerable<MyJumpViewModel>> GetMyJumpsAsync(string userId)
+        {
+            var myJumps = await repo.AllReadonly<Jump>()
+                .Where(j => j.OwnerId == userId && j.IsActive == true)
+                .Include(j => j.Category)
+                .ToListAsync();
+
+            if (myJumps == null)
+            {
+                throw new Exception("Jump entity error");
+            }
+
+            return myJumps
+                .Select(j => new MyJumpViewModel()
+                {
+                    Id = j.Id,
+                    OwnerId = j.OwnerId,
+                    Title = j.Title,
+                    Category = j.Category.Name,
+                    Description = j.Description,
+                    IsTaken = j.IsTaken,
+                    IsActive = j.IsActive,
+                    IsApproved = j.IsApproved,
+                    InstructorId = j.InstructorId,
+                    EndDate = j.EndDate,
+                    StartDate = j.StartDate,
+                    Status = j.Status
+                });
         }
     }
 }

@@ -1,0 +1,51 @@
+﻿@model IEnumerable<MyJumpViewModel>
+
+@{
+    ViewBag.Title = "My Jumps";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="text-center row">
+    @if (Model.Any())
+    {
+        @foreach (var jump in Model)
+        {
+        <div class="card col-4" style="width: 20rem;">
+           @* <img class="card-img-top" style="width: 18rem;"
+             src="@jump.ImageUrl" alt="Book Image">*@
+            <div class="card-body">
+
+                <h5 class="card-title mt-1">@jump.Title</h5>
+                <p class="mb-0">Description: @jump.Description</p>
+                <p class="mb-0">Category: @jump.Category</p>
+                <p class="mb-0">Jump is approved: @(jump.IsApproved ? "✔" : "❌")</p>
+                <p class="mb-0">Jump is taken: @(jump.IsTaken ? "✔" : "❌")</p>
+                <p class="mb-0">Jump is active: @(jump.IsActive ? "✔" : "❌")</p>
+                <p class="mb-0">InstructorId: @(jump.InstructorId == null ? "This jump is not taken" : @jump.InstructorId)  </p>
+                <p class="mb-0">Start date: @jump.StartDate</p>
+                <p class="mb-0">End date: @(jump.EndDate == null ? "This jump is not completed" : jump.EndDate) </p>
+                <p class="mb-0">Status: @jump.Status</p>
+            </div>
+                @if ((this.User.Id() == @jump.OwnerId) && (@jump.IsTaken == false) && (@jump.IsApproved))
+                {   <div>
+                    <a asp-controller="Jump" asp-action="Edit" asp-route-id="@jump.Id" class="btn btn-primary mb-2">Edit</a>
+
+                        <a asp-controller="Jump" asp-action="Delete" asp-route-id="@jump.Id" onclick="return confirm('Are sure wants to delete this jump?');" class="btn btn-danger mb-2">Delete</a>
+                    </div>
+                }
+                @if (jump.IsTaken && jump.IsActive && jump.IsApproved)
+                {
+                   <a asp-controller="Jump" asp-action="Complete" asp-route-id="@jump.Id" class="btn btn-primary mb-2">Mark as Completed</a>
+                }
+        </div>
+        }  
+    } 
+    else
+    {
+        <p>You have no added jumps, <a href="/Jump/Add">add</a> one now</p>
+    }
+</div>
+
+
