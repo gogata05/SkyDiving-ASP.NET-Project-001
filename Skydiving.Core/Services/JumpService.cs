@@ -15,17 +15,25 @@ namespace Skydiving.Core.Services
             repo = _repo;
         }
 
-        public async Task AddJumpAsync(Jump model)
+        public async Task AddJumpAsync(string id, JumpModel model)
         {
-            var user = await repo.GetByIdAsync<User>("ed630639-ced3-4c6a-90cb-ad0603394d22");
+            var user = await repo.All<User>().Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
             var jump = new Jump()
             {
-                Name = model.Name,
+                Title = model.Title,
                 Description = model.Description,
-                Category = model.Category,
+                JumpCategoryId = model.CategoryId,
+                OwnerName = user.UserName,
                 Owner = user,
                 OwnerId = user.Id,
                 StartDate = DateTime.Now,
+                IsActive = true
             };
             await repo.AddAsync<Jump>(jump);
             await repo.SaveChangesAsync();
