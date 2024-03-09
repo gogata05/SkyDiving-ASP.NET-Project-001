@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Skydiving.Core.Constants;
 using Skydiving.Core.IServices;
 using Skydiving.Core.ViewModels;
@@ -10,10 +11,11 @@ namespace Skydiving.Controllers
     public class JumpController : Controller
     {
         private readonly IJumpService service;
-
-        public JumpController(IJumpService _service)
+        private readonly ILogger<JumpController> logger;
+        public JumpController(IJumpService _service, ILogger<JumpController> _logger)
         {
             service = _service;
+            logger = _logger;
         }
 
         [HttpGet]
@@ -36,6 +38,24 @@ namespace Skydiving.Controllers
 
             await service.AddJumpAsync(userId, model);
             return RedirectToAction(nameof(All));
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> All()
+        {
+            try
+            {
+                var jump = await service.GetAllJumpsAsync();
+                return View(jump);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

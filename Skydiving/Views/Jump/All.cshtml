@@ -1,0 +1,34 @@
+﻿@model IEnumerable<JumpViewModel>
+
+@{
+    ViewBag.Title = "All Jumps";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="text-center row">
+    @if (Model.Any())
+    {
+        @foreach (var jump in Model)
+        {
+            <div class="card col-4" style="width: 20rem;">
+                <div class="card-body">
+
+                    <h5 class="card-title mt-1">@jump.Title</h5>
+                    <p class="mb-0">Description: @jump.Description</p>
+                    <p class="mb-0">Category: @jump.Category</p>
+                    <p class="mb-0">OwnerName: @jump.OwnerName</p>
+                    <p class="mb-0">StartDate: @jump.StartDate</p>
+                </div>           
+                <a asp-controller="Jump" asp-action="Details" asp-route-id="@jump.Id" class="btn btn-success mb-2">Details</a>               
+            </div>
+        }
+
+    } else
+    {
+        <h3 class="text-center">No current jumps</h3>
+    }
+</div>
+
+

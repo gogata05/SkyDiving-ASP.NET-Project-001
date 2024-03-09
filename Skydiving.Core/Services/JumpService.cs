@@ -38,5 +38,27 @@ namespace Skydiving.Core.Services
             await repo.AddAsync<Jump>(jump);
             await repo.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<JumpViewModel>> GetAllJumpsAsync()
+        {
+            var jumps = await repo.AllReadonly<Jump>().Where(j => j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").Include(j => j.Category).ToListAsync();
+
+            if (jumps == null)
+            {
+                throw new Exception("Jump entity error");
+            }
+
+            return jumps
+                .Select(j => new JumpViewModel()
+                {
+                    Id = j.Id,
+                    Title = j.Title,
+                    Category = j.Category.Name,
+                    Description = j.Description,
+                    OwnerName = j.OwnerName,
+                    OwnerId = j.OwnerId,
+                    StartDate = j.StartDate
+                });
+        }
     }
 }
