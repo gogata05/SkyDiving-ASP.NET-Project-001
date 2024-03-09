@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Skydiving.Infrastructure": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false
+    }
+  }
+}
