@@ -18,5 +18,8 @@ namespace Skydiving.Core.IServices
 
         Task<bool> JumpExistAsync(int id);
 
+        Task<IEnumerable<CategoryViewModel>> AllCategories();
+
+        Task<bool> CategoryExists(int categoryId);
     }
 }

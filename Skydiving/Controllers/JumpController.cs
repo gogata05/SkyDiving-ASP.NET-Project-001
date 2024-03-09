@@ -19,25 +19,53 @@ namespace Skydiving.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
+        public async Task<IActionResult> Add()
         {
-            var model = new JumpModel();
-            var userId = User.Id();
-            return View(model);
+            try
+            {
+                var model = new JumpModel()
+                {
+                    JumpCategories = await service.AllCategories()
+                };
+                return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
-
         [HttpPost]
+        [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Add(JumpModel model)
         {
+
+            if (await service.CategoryExists(model.CategoryId) == false)
+            {
+                ModelState.AddModelError(nameof(model.CategoryId), "Category does not exists");
+            }
+
             if (!ModelState.IsValid)
             {
+                model.JumpCategories = await service.AllCategories();
                 return View(model);
 
             }
-            var userId = User.Id();
-
-            await service.AddJumpAsync(userId, model);
-            return RedirectToAction(nameof(All));
+            try
+            {
+                var userId = User.Id();
+                await service.AddJumpAsync(userId, model);
+                TempData[MessageConstant.SuccessMessage] = "Jump send for review!";
+                return RedirectToAction(nameof(MyJumps));
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -59,22 +87,51 @@ namespace Skydiving.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id,string userId)
+        [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
+        public async Task<IActionResult> Edit(int id)
         {
-            var model = await service.GetEditAsync(id,userId);
-            return View(model);
+            try
+            {
+                var model = await service.GetEditAsync(id, User.Id());
+                model.JumpCategories = await service.AllCategories();
+                return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction(nameof(MyJumps));
+            }
         }
-
         [HttpPost]
+        [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Edit(int id, JumpModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
+                if (await service.CategoryExists(model.CategoryId) == false)
+                {
+                    ModelState.AddModelError(nameof(model.CategoryId), "Category does not exist");
+                    model.JumpCategories = await service.AllCategories();
+                    return View(model);
+                }
 
+                if (!ModelState.IsValid)
+                {
+                    model.JumpCategories = await service.AllCategories();
+                    return View(model);
+
+                }
+
+                await service.PostEditAsync(id, model);
+                return RedirectToAction(nameof(MyJumps));
             }
-            await service.PostEditAsync(id, model);
-            return RedirectToAction("All", "Jump");
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction(nameof(MyJumps));
+            }
         }
 
         [HttpGet]

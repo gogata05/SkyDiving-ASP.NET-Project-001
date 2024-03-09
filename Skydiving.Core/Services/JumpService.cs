@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Skydiving.Infrastructure.Data.EntityModels;
 using Skydiving.Core.ViewModels;
 using Skydiving.Core.IServices;
+using System;
 
 namespace Skydiving.Core.Services
 {
@@ -183,6 +184,22 @@ namespace Skydiving.Core.Services
                     StartDate = j.StartDate,
                     Status = j.Status
                 });
+        }
+
+        public async Task<IEnumerable<CategoryViewModel>> AllCategories()
+        {
+            return await repo.AllReadonly<JumpCategory>()
+                .Select(x => new CategoryViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .ToListAsync();
+        }
+        public async Task<bool> CategoryExists(int categoryId) // check if needed
+        {
+            return await repo.AllReadonly<JumpCategory>()
+                .AnyAsync(c => c.Id == categoryId);
         }
     }
 }
