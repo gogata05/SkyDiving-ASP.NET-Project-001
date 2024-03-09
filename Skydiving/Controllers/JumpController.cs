@@ -57,5 +57,47 @@ namespace Skydiving.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id,string userId)
+        {
+            var model = await service.GetEditAsync(id,userId);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, JumpModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+
+            }
+            await service.PostEditAsync(id, model);
+            return RedirectToAction("All", "Jump");
+        }
+
+        [HttpGet]
+        //[AllowAnonymous]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                if (await service.JumpExistAsync(id) == false)
+                {
+                    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                    return RedirectToAction("All", "Jump");
+                }
+
+                var model = await service.JumpDetailsAsync(id);
+                return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
+        }
     }
 }

@@ -60,5 +60,99 @@ namespace Skydiving.Core.Services
                     StartDate = j.StartDate
                 });
         }
+
+        public async Task<JumpModel> GetEditAsync(int id, string userId)
+        {
+            if (!await JumpExistAsync(id))
+            {
+                throw new Exception("Jump not found");
+            }
+
+            var owner = await repo.AllReadonly<User>().Where(x => x.Id == userId).FirstOrDefaultAsync();
+
+            if (owner == null)
+            {
+                throw new Exception("Owner not found");
+            }
+
+            var jump = await repo.All<Jump>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
+
+            if (jump.Owner?.Id != userId)
+            {
+                throw new Exception("User is not owner");
+            }
+
+
+            if (jump.IsTaken == true)
+            {
+                throw new Exception("Can't edit ongoing jump");
+            }
+
+
+            if (jump.IsApproved != true)
+            {
+                throw new Exception("This jump is not approved");
+            }
+
+            var model = new JumpModel()
+            {
+                Title = jump.Title,
+                Description = jump.Description,
+                CategoryId = jump.JumpCategoryId,
+                Owner = owner,
+                OwnerName = jump.OwnerName
+            };
+            return model;
+        }
+
+        public async Task PostEditAsync(int id, JumpModel model)
+        {
+            if (!await JumpExistAsync(id))
+            {
+                throw new Exception("Jump not found");
+            }
+
+            var jump = await repo.All<Jump>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
+
+            jump.Title = model.Title;
+            jump.Description = model.Description;
+            jump.JumpCategoryId = model.CategoryId;
+
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task<JumpViewModel> JumpDetailsAsync(int id)
+        {
+            if (!await JumpExistAsync(id))
+            {
+                throw new Exception("Jump not found");
+            }
+
+            var jump = await repo.AllReadonly<Jump>()
+                .Where(j => j.Id == id)
+                .Include(c => c.Category)
+                .FirstAsync();
+
+
+            var model = new JumpViewModel()
+            {
+                OwnerId = jump.OwnerId,
+                OwnerName = jump.OwnerName,
+                Title = jump.Title,
+                Description = jump.Description,
+                Category = jump.Category.Name,
+                Id = jump.Id
+            };
+
+            return model;
+
+        }
+
+        public async Task<bool> JumpExistAsync(int id)
+        {
+            var result = await repo.AllReadonly<Jump>().Where(x => x.Id == id).AnyAsync();
+
+            return result;
+        }
     }
 }
