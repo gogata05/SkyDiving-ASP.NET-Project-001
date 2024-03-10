@@ -40,6 +40,7 @@ builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 builder.Services.AddScoped<IAdminEquipmentService, AdminEquipmentService>();
 builder.Services.AddScoped<IJumpAdministrationService, JumpAdministrationService>();
 builder.Services.AddScoped<IInstructorService, InstructorService>();
+builder.Services.AddScoped<StatisticAdministrationService>();
 
 builder.Services.AddControllersWithViews().AddMvcOptions(options =>
 {
