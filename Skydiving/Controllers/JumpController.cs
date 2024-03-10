@@ -5,6 +5,7 @@ using Skydiving.Core.Constants;
 using Skydiving.Core.IServices;
 using Skydiving.Core.ViewModels;
 using Skydiving.Extensions;
+
 namespace Skydiving.Controllers
 {
     [Authorize]
@@ -12,6 +13,7 @@ namespace Skydiving.Controllers
     {
         private readonly IJumpService service;
         private readonly ILogger<JumpController> logger;
+
         public JumpController(IJumpService _service, ILogger<JumpController> _logger)
         {
             service = _service;
@@ -37,6 +39,7 @@ namespace Skydiving.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+
         [HttpPost]
         [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Add(JumpModel model)
@@ -53,6 +56,7 @@ namespace Skydiving.Controllers
                 return View(model);
 
             }
+
             try
             {
                 var userId = User.Id();
@@ -102,6 +106,7 @@ namespace Skydiving.Controllers
                 return RedirectToAction(nameof(MyJumps));
             }
         }
+
         [HttpPost]
         [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Edit(int id, JumpModel model)
@@ -179,5 +184,34 @@ namespace Skydiving.Controllers
             }
         }
 
+        [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
+        public async Task<IActionResult> Complete(int id)
+        {
+            try
+            {
+                string instructorId = await service.CompleteJump(id, User.Id());
+                return RedirectToAction("RateInstructor", "Instructor", new { id = instructorId, jumpId = id });
+            }
+            catch (Exception)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await service.DeleteJumpAsync(id, User.Id());
+                return RedirectToAction(nameof(MyJumps));
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = ms.Message;
+                return RedirectToAction(nameof(MyJumps));
+            }
+        }
     }
 }

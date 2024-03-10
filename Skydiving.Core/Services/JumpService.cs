@@ -48,7 +48,7 @@ namespace Skydiving.Core.Services
             await repo.AddAsync<Jump>(jump);
             await repo.SaveChangesAsync();
         }
-  
+
         public async Task<IEnumerable<JumpViewModel>> GetAllJumpsAsync()
         {
             var jumps = await repo.AllReadonly<Jump>().Where(j => j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").Include(j => j.Category).ToListAsync();
@@ -191,7 +191,7 @@ namespace Skydiving.Core.Services
                     JumpTitle = x.Jump.Title,
                     JumpCategory = x.Jump.Category.Name,
                     OwnerId = x.Offer.OwnerId,
-                    //Rating = await instructorService.InstructorRatingAsync(x.Offer.OwnerId),
+                    Rating = await instructorService.InstructorRatingAsync(x.Offer.OwnerId),
                     Price = x.Offer.Price
                 });
             }

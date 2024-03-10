@@ -71,5 +71,39 @@ namespace Skydiving.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult RateInstructor(string id, int jumpId)
+        {
+            var model = new InstructorRatingModel()
+            {
+                InstructorId = id,
+                UserId = User.Id(),
+                JumpId = jumpId
+            };
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> RateInstructor(string id, int jumpId, InstructorRatingModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            try
+            {
+                await service.RateInstructorAsync(User.Id(), id, jumpId, model);
+                return RedirectToAction("MyJumps", "Jump");
+            }
+            catch (Exception ms)
+            {
+                logger.LogError(ms.Message, ms);
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("Index", "Home");
+            }
+
+        }
     }
 }

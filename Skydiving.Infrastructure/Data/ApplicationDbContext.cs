@@ -27,6 +27,7 @@ namespace Skydiving.Infrastructure.Data
 
         public DbSet<JumpStatus> JumpStatus { get; set; }
 
+        public DbSet<Rating> Ratings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
