@@ -32,6 +32,10 @@ namespace Skydiving.Controllers
                 {
                     return View("404");
                 }
+                if (statusCode == 500)
+                {
+                    return View("500");
+                }
             }
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
