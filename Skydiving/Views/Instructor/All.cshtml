@@ -1,0 +1,37 @@
+﻿@model IEnumerable<InstructorViewModel>
+
+@{
+    ViewBag.Title = "All Instuctors";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+@if (User.IsInRole("Jumper"))
+{ //change form with <a>
+    <div class="text-center">
+        <a asp-controller="Instructor" asp-action="Become" class="btn btn-success mb-2">Join Our Instructors</a>
+    </div>
+}
+<div class="text-center row">
+    @if (Model.Any())
+    {
+        @foreach (var instructor in Model)
+    {
+        <div class="card col-4" style="width: 20rem;">
+            <div class="card-body">
+                <p class="mb-0">@instructor.FirstName</p>
+                <p class="mb-0">@instructor.LastName</p>
+                <p class="mb-0">Phone number: @instructor.PhoneNumber</p>
+                <p class="mb-0">Rating: @instructor.Rating</p>
+            </div>
+        </div>
+    }
+    }
+    else
+    {
+        <h3>No instructors available</h3>
+    }
+</div>
+
+
+

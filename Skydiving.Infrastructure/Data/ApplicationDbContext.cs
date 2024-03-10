@@ -27,6 +27,7 @@ namespace Skydiving.Infrastructure.Data
 
         public DbSet<JumpStatus> JumpStatus { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfiguration());

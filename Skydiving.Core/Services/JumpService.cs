@@ -191,7 +191,7 @@ namespace Skydiving.Core.Services
                     JumpTitle = x.Jump.Title,
                     JumpCategory = x.Jump.Category.Name,
                     OwnerId = x.Offer.OwnerId,
-                    Rating = await instructorService.InstructorRatingAsync(x.Offer.OwnerId),
+                    //Rating = await instructorService.InstructorRatingAsync(x.Offer.OwnerId),
                     Price = x.Offer.Price
                 });
             }
