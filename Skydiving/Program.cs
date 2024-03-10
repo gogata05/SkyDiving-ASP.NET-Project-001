@@ -35,6 +35,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IJumpService, JumpService>();
+builder.Services.AddScoped<IOfferService, OfferService>();
 
 builder.Services.AddControllersWithViews().AddMvcOptions(options =>
 {

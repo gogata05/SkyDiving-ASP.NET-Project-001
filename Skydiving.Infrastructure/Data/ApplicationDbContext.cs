@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Skydiving.Infrastructure.Data.Configuration;
 using Skydiving.Infrastructure.Data.EntityModels;
+using Skydiving.Infrastructure.Migrations;
 
 namespace Skydiving.Infrastructure.Data
 {

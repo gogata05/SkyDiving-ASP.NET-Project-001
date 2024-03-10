@@ -11,6 +11,8 @@ namespace Skydiving.Core.IServices
 
         Task<IEnumerable<MyJumpViewModel>> GetMyJumpsAsync(string userId);
 
+        Task<string> CompleteJump(int jumpId, string userId);
+
         Task<JumpModel> GetEditAsync(int id, string userId);
 
         Task PostEditAsync(int id, JumpModel model);
@@ -24,5 +26,7 @@ namespace Skydiving.Core.IServices
         Task<IEnumerable<CategoryViewModel>> AllCategories();
 
         Task<bool> CategoryExists(int categoryId);
+
+        Task DeleteJumpAsync(int jumpId, string userId);
     }
 }

@@ -11,12 +11,20 @@ namespace Skydiving.Core.Services
     public class JumpService : IJumpService
     {
         private readonly IRepository repo;
+        private readonly IInstructorService instructorService;
 
-        public JumpService(IRepository _repo)
+        public JumpService(IRepository _repo, IInstructorService _instructorService)
         {
             repo = _repo;
+            instructorService = _instructorService;
         }
-
+        /// <summary>
+        /// Add Jump to the DB
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task AddJumpAsync(string id, JumpModel model)
         {
             var user = await repo.All<User>().Where(x => x.Id == id).FirstOrDefaultAsync();
@@ -40,7 +48,7 @@ namespace Skydiving.Core.Services
             await repo.AddAsync<Jump>(jump);
             await repo.SaveChangesAsync();
         }
-
+  
         public async Task<IEnumerable<JumpViewModel>> GetAllJumpsAsync()
         {
             var jumps = await repo.AllReadonly<Jump>().Where(j => j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").Include(j => j.Category).ToListAsync();
@@ -122,7 +130,7 @@ namespace Skydiving.Core.Services
 
             await repo.SaveChangesAsync();
         }
-
+    
         public async Task<JumpViewModel> JumpDetailsAsync(int id)
         {
             if (!await JumpExistAsync(id))
@@ -156,6 +164,56 @@ namespace Skydiving.Core.Services
 
             return result;
         }
+    
+        public async Task<IEnumerable<OfferServiceViewModel>> JumpOffersAsync(string userId)
+        {
+            var jumpOffers = await repo.AllReadonly<JumpOffer>()
+                .Where(x => x.Jump.OwnerId == userId && x.Offer.IsAccepted == null
+                && x.Jump.IsTaken == false && x.Offer.IsActive == true && x.Jump.IsActive == true).Include(j => j.Jump).Include(c => c.Jump.Category).Include(o => o.Offer).Include(u => u.Offer.Owner).ToListAsync();
+
+            if (jumpOffers == null)
+            {
+                throw new Exception("JumpOffer entity error");
+            }
+
+            List<OfferServiceViewModel> offers = new List<OfferServiceViewModel>();
+
+            foreach (var x in jumpOffers)
+            {
+                offers.Add(new OfferServiceViewModel()
+                {
+                    Id = x.OfferId,
+                    Description = x.Offer.Description,
+                    JumpDescription = x.Jump.Description,
+                    InstructorName = $"{x.Offer.Owner.FirstName} {x.Offer.Owner.LastName}",
+                    InstructorPhoneNumber = x.Offer.Owner.PhoneNumber,
+                    JumpId = x.JumpId,
+                    JumpTitle = x.Jump.Title,
+                    JumpCategory = x.Jump.Category.Name,
+                    OwnerId = x.Offer.OwnerId,
+                    Rating = await instructorService.InstructorRatingAsync(x.Offer.OwnerId),
+                    Price = x.Offer.Price
+                });
+            }
+            return offers;
+        }
+  
+        public async Task<IEnumerable<CategoryViewModel>> AllCategories()
+        {
+            return await repo.AllReadonly<JumpCategory>()
+                .Select(x => new CategoryViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .ToListAsync();
+        }
+
+        public async Task<bool> CategoryExists(int categoryId) // check if needed
+        {
+            return await repo.AllReadonly<JumpCategory>()
+                          .AnyAsync(c => c.Id == categoryId);
+        }
 
         public async Task<IEnumerable<MyJumpViewModel>> GetMyJumpsAsync(string userId)
         {
@@ -187,53 +245,74 @@ namespace Skydiving.Core.Services
                 });
         }
 
-        public async Task<IEnumerable<OfferServiceViewModel>> JumpOffersAsync(string userId)
+        public async Task<string> CompleteJump(int jumpId, string userId)
         {
-            var jumpOffers = await repo.AllReadonly<JumpOffer>()
-                .Where(x => x.Jump.OwnerId == userId && x.Offer.IsAccepted == null
-                                                     && x.Jump.IsTaken == false && x.Offer.IsActive == true && x.Jump.IsActive == true).Include(j => j.Jump).Include(c => c.Jump.Category).Include(o => o.Offer).Include(u => u.Offer.Owner).ToListAsync();
+            var jump = await repo.All<Jump>().Where(x => x.Id == jumpId).FirstOrDefaultAsync();
 
-            if (jumpOffers == null)
+            if (jump == null)
             {
-                throw new Exception("JumpOffer entity error");
+                throw new Exception("Jump not found");
             }
 
-            List<OfferServiceViewModel> offers = new List<OfferServiceViewModel>();
-
-            foreach (var x in jumpOffers)
+            if (jump.IsTaken == false || jump.InstructorId == null)
             {
-                offers.Add(new OfferServiceViewModel()
-                {
-                    Id = x.OfferId,
-                    Description = x.Offer.Description,
-                    JumpDescription = x.Jump.Description,
-                    InstructorName = $"{x.Offer.Owner.FirstName} {x.Offer.Owner.LastName}",
-                    InstructorPhoneNumber = x.Offer.Owner.PhoneNumber,
-                    JumpId = x.JumpId,
-                    JumpTitle = x.Jump.Title,
-                    JumpCategory = x.Jump.Category.Name,
-                    OwnerId = x.Offer.OwnerId,
-                    //Rating = await instructorService.InstructorRatingAsync(x.Offer.OwnerId),
-                    Price = x.Offer.Price
-                });
+                throw new Exception("Jump is not taken");
             }
-            return offers;
+
+            if (jump.OwnerId != userId)
+            {
+                throw new Exception("Invalid user Id");
+            }
+
+            var instructorId = jump.InstructorId;
+
+            jump.IsActive = false;
+            jump.EndDate = DateTime.Now;
+            jump.Status = "Completed";
+            await repo.SaveChangesAsync();
+
+            return instructorId;
         }
 
-        public async Task<IEnumerable<CategoryViewModel>> AllCategories()
+        public async Task DeleteJumpAsync(int jumpId, string userId)
         {
-            return await repo.AllReadonly<JumpCategory>()
-                .Select(x => new CategoryViewModel()
+            var jump = await repo.All<Jump>().Where(x => x.Id == jumpId).FirstOrDefaultAsync();
+
+            if (jump == null)
+            {
+                throw new Exception("Jump not found");
+            }
+
+            if (jump.IsApproved == false)
+            {
+                throw new Exception("Jump not reviewed");
+
+            }
+
+            if (jump.IsTaken == true)
+            {
+                throw new Exception("Can't delete ongoing jump");
+            }
+
+
+            if (jump.OwnerId != userId)
+            {
+                throw new Exception("User is not owner");
+            }
+
+            var jumpOffer = await repo.All<JumpOffer>().Where(x => x.JumpId == jumpId).ToListAsync();
+
+            if (jumpOffer != null && jumpOffer.Count > 0)
+            {
+                foreach (var jo in jumpOffer)
                 {
-                    Id = x.Id,
-                    Name = x.Name
-                })
-                .ToListAsync();
-        }
-        public async Task<bool> CategoryExists(int categoryId) // check if needed
-        {
-            return await repo.AllReadonly<JumpCategory>()
-                .AnyAsync(c => c.Id == categoryId);
+                    var offer = await repo.GetByIdAsync<Offer>(jo.OfferId);
+                    offer.IsActive = false;
+                }
+            }
+            jump.IsActive = false;
+            jump.Status = "Deleted";
+            await repo.SaveChangesAsync();
         }
     }
 }
