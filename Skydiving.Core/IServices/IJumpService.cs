@@ -1,4 +1,5 @@
 ﻿using Skydiving.Core.ViewModels;
+using Skydiving.Core.ViewModels.Offer;
 
 namespace Skydiving.Core.IServices
 {
@@ -17,6 +18,8 @@ namespace Skydiving.Core.IServices
         Task<JumpViewModel> JumpDetailsAsync(int id);
 
         Task<bool> JumpExistAsync(int id);
+
+        Task<IEnumerable<OfferServiceViewModel>> JumpOffersAsync(string userId);
 
         Task<IEnumerable<CategoryViewModel>> AllCategories();
 

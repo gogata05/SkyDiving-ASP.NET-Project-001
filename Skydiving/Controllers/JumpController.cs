@@ -68,7 +68,6 @@ namespace Skydiving.Controllers
             }
         }
 
-
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> All()
@@ -157,6 +156,15 @@ namespace Skydiving.Controllers
             }
         }
 
+        [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
+        public async Task<IActionResult> JumpOffers()
+        {
+            var model = await service.JumpOffersAsync(User.Id());
+
+            return View(model);
+        }
+
+        [Authorize(Roles = $"{RoleConstants.Jumper}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> MyJumps()
         {
             try

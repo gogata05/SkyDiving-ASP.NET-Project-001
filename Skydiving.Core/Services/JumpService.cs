@@ -4,6 +4,7 @@ using Skydiving.Infrastructure.Data.EntityModels;
 using Skydiving.Core.ViewModels;
 using Skydiving.Core.IServices;
 using System;
+using Skydiving.Core.ViewModels.Offer;
 
 namespace Skydiving.Core.Services
 {
@@ -184,6 +185,39 @@ namespace Skydiving.Core.Services
                     StartDate = j.StartDate,
                     Status = j.Status
                 });
+        }
+
+        public async Task<IEnumerable<OfferServiceViewModel>> JumpOffersAsync(string userId)
+        {
+            var jumpOffers = await repo.AllReadonly<JumpOffer>()
+                .Where(x => x.Jump.OwnerId == userId && x.Offer.IsAccepted == null
+                                                     && x.Jump.IsTaken == false && x.Offer.IsActive == true && x.Jump.IsActive == true).Include(j => j.Jump).Include(c => c.Jump.Category).Include(o => o.Offer).Include(u => u.Offer.Owner).ToListAsync();
+
+            if (jumpOffers == null)
+            {
+                throw new Exception("JumpOffer entity error");
+            }
+
+            List<OfferServiceViewModel> offers = new List<OfferServiceViewModel>();
+
+            foreach (var x in jumpOffers)
+            {
+                offers.Add(new OfferServiceViewModel()
+                {
+                    Id = x.OfferId,
+                    Description = x.Offer.Description,
+                    JumpDescription = x.Jump.Description,
+                    InstructorName = $"{x.Offer.Owner.FirstName} {x.Offer.Owner.LastName}",
+                    InstructorPhoneNumber = x.Offer.Owner.PhoneNumber,
+                    JumpId = x.JumpId,
+                    JumpTitle = x.Jump.Title,
+                    JumpCategory = x.Jump.Category.Name,
+                    OwnerId = x.Offer.OwnerId,
+                    //Rating = await instructorService.InstructorRatingAsync(x.Offer.OwnerId),
+                    Price = x.Offer.Price
+                });
+            }
+            return offers;
         }
 
         public async Task<IEnumerable<CategoryViewModel>> AllCategories()
