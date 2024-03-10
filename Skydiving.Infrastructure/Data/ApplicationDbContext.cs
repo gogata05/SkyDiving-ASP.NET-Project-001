@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Skydiving.Infrastructure.Data.Configuration;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Skydiving.Infrastructure.Data.Configuration;
 using Skydiving.Infrastructure.Data.EntityModels;
-using Skydiving.Infrastructure.Migrations;
 
 namespace Skydiving.Infrastructure.Data
 {
@@ -13,6 +12,7 @@ namespace Skydiving.Infrastructure.Data
         {
 
         }
+
         public DbSet<Jump> Jumps { get; set; }
 
         public DbSet<JumpCategory> JumpsCategories { get; set; }
@@ -29,15 +29,17 @@ namespace Skydiving.Infrastructure.Data
 
         public DbSet<Rating> Ratings { get; set; }
 
+        public DbSet<Cart> Carts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserRoleConfiguration());
             builder.ApplyConfiguration(new JumpStatusConfiguration());
             builder.ApplyConfiguration(new JumpCategoryConfiguration());
             builder.ApplyConfiguration(new EquipmentCategoryConfiguration());
-
 
             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
@@ -46,6 +48,9 @@ namespace Skydiving.Infrastructure.Data
 
             builder.Entity<JumpOffer>()
                 .HasKey(x => new { x.JumpId, x.OfferId });
+
+            builder.Entity<EquipmentCart>()
+                .HasKey(x => new { x.EquipmentId, x.CartId });
 
             base.OnModelCreating(builder);
         }

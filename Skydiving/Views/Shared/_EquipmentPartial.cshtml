@@ -1,0 +1,19 @@
+﻿@model EquipmentViewModel
+
+<div class="card col-4" style="width: 20rem;">
+    <img class="card-img-top" src="@Model.ImageUrl" alt="Equipment Image">
+    <div class="card-body">
+        <h5 class="card-title mt-1">@Model.Title</h5>
+        <p class="mb-0">Brand: @Model.Brand</p>
+        <p class="mb-0">Price: @Model.Price</p>
+@*        @String.Format("{0:f2}", Model.PricePerMonth) BGN
+*@        <p class="mb-0">Available: @Model.Quantity</p>
+        <p class="mb-0">Category: @Model.Category</p>
+    </div>
+    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_@Model.Id">
+        Details
+    </a>
+    <partial name="_EquipmentDetailsPartial" model="@Model" />
+    <br>
+    <a asp-controller="Cart" asp-action="Add" asp-route-id="@Model.Id" class="btn btn-success mb-2">Add to Cart</a>
+</div>

@@ -1,0 +1,17 @@
+﻿@using Skydiving.Core.ViewModels.Equipment
+
+@model EquipmentModel
+
+@{
+    ViewBag.Title = "Add Equipment";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<partial name="_EquipmentFormPartial" model="@Model" />
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

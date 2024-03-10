@@ -24,8 +24,8 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         [Required]
         public int EquipmentCategoryId { get; set; }
 
-        //[ForeignKey(nameof(EquipmentCategoryId))]
-        //public EquipmentCategory Category { get; set; } = null!;
+        [ForeignKey(nameof(EquipmentCategoryId))]
+        public EquipmentCategory Category { get; set; } = null!;
 
         [Required]
         [StringLength(500)]
@@ -46,6 +46,7 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         [StringLength(500)]
         public string ImageUrl { get; set; } = null!;
 
+        public IEnumerable<EquipmentCart> EquipmentsCarts { get; set; } = new List<EquipmentCart>();
     }
 }
 

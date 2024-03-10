@@ -1,7 +1,4 @@
-﻿@using Skydiving.Core.Constants
-
-
-@if (TempData[MessageConstant.ErrorMessage] != null)
+﻿@if (TempData[MessageConstant.ErrorMessage] != null)
 {
     <script>
         $(function () { toastr.error('@TempData[MessageConstant.ErrorMessage].ToString()'); });
