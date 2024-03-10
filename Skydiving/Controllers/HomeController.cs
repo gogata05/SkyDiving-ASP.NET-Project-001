@@ -1,5 +1,6 @@
 ﻿using Skydiving.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Skydiving.Core.Constants;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Skydiving.Core.IServices;
@@ -8,18 +9,31 @@ namespace Skydiving.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
+        private readonly IEquipmentService equipmentService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> _logger, IEquipmentService _equipmentService)
         {
-            _logger = logger;
+            logger = _logger;
+            equipmentService = _equipmentService;
         }
 
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var model = await equipmentService.GetLastThreeEquipments();
+                return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
-  
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
