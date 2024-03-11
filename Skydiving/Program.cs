@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Skydiving.Core.Services;
 using Skydiving.Infrastructure.Data.EntityModels;
 using Skydiving.Core.IServices;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +37,7 @@ builder.Services.AddScoped<IJumpService, JumpService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 builder.Services.AddScoped<IAdminEquipmentService, AdminEquipmentService>();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IJumpAdministrationService, JumpAdministrationService>();
 builder.Services.AddScoped<IInstructorService, InstructorService>();
 builder.Services.AddScoped<StatisticAdministrationService>();
