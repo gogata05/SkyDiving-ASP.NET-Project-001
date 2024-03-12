@@ -31,6 +31,8 @@ namespace Skydiving.Infrastructure.Data
 
         public DbSet<Cart> Carts { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
@@ -40,6 +42,7 @@ namespace Skydiving.Infrastructure.Data
             builder.ApplyConfiguration(new JumpStatusConfiguration());
             builder.ApplyConfiguration(new JumpCategoryConfiguration());
             builder.ApplyConfiguration(new EquipmentCategoryConfiguration());
+            builder.ApplyConfiguration(new EquipmentConfiguration());
 
             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {

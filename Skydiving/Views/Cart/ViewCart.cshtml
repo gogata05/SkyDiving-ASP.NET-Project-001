@@ -9,76 +9,79 @@
 <hr />
 
 <body onload="loadCities()">
-<div class="text-center row">
-    @if(Model.Any())
-    {     
+    <div class="text-center row">
+        @if (Model.Any())
+        {
             <form asp-controller="Cart" asp-action="Checkout" method="post">
 
                 <table class="table table-striped" style="width: 100%">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Brand</th>
-                                    <th>Available</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th></th>
-                                    <th>Cost</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {    
-                                    <tr >
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Brand</th>
+                            <th>Available</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th></th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
 
-                                        <td>
-                                            <label>@item.Title</label>
-                                            <input type="hidden" asp-for="@item.Title" readonly value="@item.Title">
-                                        </td>
-                                        <td>
-                                            <label>@item.Brand</label>
-                                            <input type="hidden" asp-for="@item.Brand" readonly value="@item.Brand">
-                                        </td>
-                                        <td>
-                                            <label>@item.Quantity</label>
-                                            <input type ="hidden" asp-for="@item.Quantity" readonly value="@item.Quantity">
-                                        </td>
-                                        <td>
-                                            <input asp-for="@item.OrderQuantity" id="@("qty" + item.Id)" class="my_class" type="number" value="0" min="1" max="@item.Quantity" onchange="myFunction(@item.Id); totalValue();">
-                                        </td>
-                                        <td>
-                                            <label>@item.Price</label>
-                                            <input type="hidden" asp-for="@item.Price" id="@("price" + item.Id)" readonly value="@item.Price">
-                                        </td>
-                                        <td>
-                                            <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger mb-2">Remove</a>
-                                        </td>
-                                        <td>
-                                            <input type="text" size="5" id="@("total" + item.Id)" class="cost" name="cost" readonly />
+                                <td>
+                                    <label>@item.Title</label>
+                                    <input type="hidden" asp-for="@item.Title" readonly value="@item.Title">
+                                </td>
+                                <td>
+                                    <label>@item.Brand</label>
+                                    <input type="hidden" asp-for="@item.Brand" readonly value="@item.Brand">
+                                </td>
+                                <td>
+                                    <label>@item.Quantity</label>
+                                    <input type="hidden" asp-for="@item.Quantity" readonly value="@item.Quantity">
+                                </td>
+                                <td>
+                                    <input asp-for="@item.OrderQuantity" id="@("qty" + item.Id)" class="my_class" type="number" value="0" min="1" max="@item.Quantity" onchange="myFunction(@item.Id); totalValue();">
+                                </td>
+                                <td>
+                                    <label>@item.Price</label>
+                                    <input type="hidden" asp-for="@item.Price" id="@("price" + item.Id)" readonly value="@item.Price">
+                                </td>
+                                <td>
+                                    <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger mb-2">Remove</a>
+                                </td>
+                                <td>
+                                    <input type="text" size="5" id="@("total" + item.Id)" class="cost" name="cost" readonly />
 
-                                        </td>
-                                            <input type="hidden" asp-for="@item.Id" readonly value="@item.Id">
-                                </tr>
+                                </td>
+                                <input type="hidden" asp-for="@item.Id" readonly value="@item.Id">
+                            </tr>
 
-                                }
-                                  <tr>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td><label for="total">Total:</label></td>
-                                       <td><input readonly name="total" id="total" size="5"></td>
-                                  </tr>                           
-                            </tbody>
-                        </table>
-            </form> 
+                        }
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><label for="total">Total:</label></td>
+                            <td><input readonly name="total" id="total" size="5"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="address" id="hiddenAddress">
 
-    }
-    else
-    {
-        <h3>No items in cart</h3>
-    }
+
+            </form>
+
+        }
+        else
+        {
+            <h3>No items in cart</h3>
+        }
     </div>
 
 
@@ -90,4 +93,3 @@
 
 
 
-            
