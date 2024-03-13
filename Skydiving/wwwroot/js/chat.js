@@ -43,3 +43,4 @@ document.getElementById("leaveGroup").addEventListener("click", function (event)
     });
     connection.stop();
 });
+

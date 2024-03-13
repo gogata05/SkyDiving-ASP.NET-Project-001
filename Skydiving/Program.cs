@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Skydiving.Core.Services;
+using Skydiving.Hubs;
 using Skydiving.Infrastructure.Data.EntityModels;
 using Skydiving.Core.IServices;
 
@@ -88,5 +89,6 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapRazorPages();
+app.MapHub<LiveChatHub>("/chat");
 
 app.Run();
