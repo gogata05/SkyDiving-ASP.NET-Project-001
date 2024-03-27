@@ -7,58 +7,6 @@ SoftUni ASP.NET Advanced April 2024 Project Defence
 SkyDiving is application for creating/accepting jumps requests and for buying skydiving equipment.
 
 ## Features
-The main feature of the application is fully working CRUD operations with image files.
-
-- Home page - displays the last three equipment added
-- Trips page - Catalogue that displays all Trips from the database in separate pages.
-- About page - Brief documentaton about the application.
-- Sign In/UP button - shows Register and Login forms.
-- Search bar - shows search input to find all matches in the database by trip name.
-- Add Trip - Logged in users can upload an image and create trip.
-- Profile page:
-- Dispalys the User info and all user's trips.
-- Edit Profile - Logged in users can edit their username, email and upload new avatar.
-- Trip Details page:
-- Shows detailed information and all comments about the log.
-- Loged in users can like, post comments and download the log image.
-- The creator of the log can post comments, download the log image, edit the log info and delete the log.
-- 404 page - Animated page, that pops up when there is no matching route.
-
-## How to use?
-- 0.1.Download the repository and extract it to folder
-
-<br />
-  
-- 1.Open Skydiving.sln with visual studio 2022
-- 2.In appsetting.json add your personal "ConnectionStrings"
-- 3.right click on Skydiving Project and "Set as Startup Project"
-- 4.In "Package Manager Console" with Default project: "Skydiving.Infastructure" type: update database
-- 5.Ctrl+F5
-- 6.Open Url localhost on your browser: https://localhost:7160/
-- 7.Enjoy!
-
-
-## Used libraries:
-    - `` -
-    - ``, ``, `` - for 
-    - `` -
-    - `` 
-    - `` - 
-    - `` - 
-
-## Database
-
-SSMS and MS SQL are used for storing & managing the data.
-
-## Tests
-
-- `Unit Tests`
-
-## Demo
-Live demo at Replit - 
-
-
-## Features
 - Google Maps with Econt offices in the cart view
 - Live Support chat added for support user/admin
 
@@ -98,14 +46,42 @@ Live demo at Replit -
 - View jumps statistics
 - Reply to Message Requests
 
-
 ## Roles logins:
 - Jumper: `username: jumper`, `password: jumper`
 - Instructor: `username: instructor`, `password: instructor`
 - Admin: `username: admin`, `password: admin`
 
-  
+## How to use?
+- 0.Download the repository and extract it to folder
+- 1.Open Skydiving.sln with visual studio 2022
+- 2.In appsetting.json add your personal "ConnectionStrings"
+- 3.right click on Skydiving Project and "Set as Startup Project"
+- 4.In "Package Manager Console" with Default project: "Skydiving.Infastructure" type: update database
+- 5.Ctrl+F5
+- 6.Open Url localhost on your browser: https://localhost:7160/
+- 7.Enjoy!
+
+
+## Used libraries:
+    - `SignalR` - for realtime live chat
+    - `Pace`, - for page load progress bars
+    - `Toastr` - for notifications 
+    - `jQuery` - simplifying html and css
+    - `bootstrap` - CSS Framework
+
+## Database
+
+SSMS and MS SQL are used for storing & managing the data.
+
+## Tests
+
+- `Unit Tests`
+
+## Demo
+Live demo at Replit - 
+
 ## Photos
+
 
 Recently Added Posts in Home page:
 
