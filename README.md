@@ -78,7 +78,7 @@ SSMS and MS SQL are used for storing & managing the data.
 - `Unit Tests`
 
 ## Demo
-Live demo at Replit - 
+Live demo at Replit - https://replit.com/@GeorgiMarkov/SkyDiving-ASPNET-Project-001?v=1
 
 ## Photos
 
