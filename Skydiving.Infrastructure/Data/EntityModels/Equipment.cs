@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static Skydiving.Infrastructure.Data.DataConstants.EntityConstants.Equipment;
 
 namespace Skydiving.Infrastructure.Data.EntityModels
 {
@@ -10,15 +11,15 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         public int Id { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(EquipmentTitleMaxLength)]
         public string Title { get; set; } = null!;
 
         [Required]
-        [StringLength(50)]
+        [StringLength(EquipmentBrandMaxLength)]
         public string Brand { get; set; } = null!;
 
         [Required]
-        [Range(1, 1000)]
+        [Range(EquipmentQuantityMinLength, EquipmentQuantityMaxLength)]
         public int Quantity { get; set; }
 
         [Required]
@@ -28,7 +29,7 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         public EquipmentCategory Category { get; set; } = null!;
 
         [Required]
-        [StringLength(500)]
+        [StringLength(EquipmentDescriptionMaxLength)]
         public string Description { get; set; } = null!;
 
         [Required]
@@ -40,10 +41,10 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         public bool IsActive { get; set; } = true;
 
         [Required]
-        [Precision(18, 2)]
+        [Precision(EquipmentPriceMaxLength, EquipmentPriceMinLength)]
         public decimal Price { get; set; }
 
-        [StringLength(500)]
+        [StringLength(EquipmentImageUrlMaxLength)]
         public string ImageUrl { get; set; } = null!;
 
         public IEnumerable<EquipmentCart> EquipmentsCarts { get; set; } = new List<EquipmentCart>();

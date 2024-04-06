@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static Skydiving.Infrastructure.Data.DataConstants.EntityConstants.Rating;
 
 namespace Skydiving.Infrastructure.Data.EntityModels
 {
@@ -16,11 +17,11 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         [Required]
         public int JumpId { get; set; }
 
-        [StringLength(200)]
+        [StringLength(RatingCommentMaxLength)]
         public string? Comment { get; set; }
 
         [Required]
-        [Range(1, 5)]
+        [Range(RatingPointsMinLength, RatingPointsMaxLength)]
         public int Points { get; set; }
 
     }

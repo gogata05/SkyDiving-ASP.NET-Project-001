@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-
+using static Skydiving.Infrastructure.Data.DataConstants.EntityConstants.User;
 namespace Skydiving.Infrastructure.Data.EntityModels
 {
     public class User : IdentityUser
@@ -8,10 +8,10 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         [Required]
         public bool IsInstructor { get; set; }
 
-        [StringLength(50)]
+        [StringLength(UserFirstNameMaxLength)]
         public string? FirstName { get; set; } = null;
 
-        [StringLength(50)]
+        [StringLength(UserLastNameMaxLength)]
         public string? LastName { get; set; } = null;
     }
 }

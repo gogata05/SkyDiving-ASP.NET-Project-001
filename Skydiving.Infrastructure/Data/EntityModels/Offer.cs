@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static Skydiving.Infrastructure.Data.DataConstants.EntityConstants.Offer;
 
 namespace Skydiving.Infrastructure.Data.EntityModels
 {
@@ -10,7 +11,7 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         public int Id { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [StringLength(OfferDescriptionMaxLength)]
         public string Description { get; set; } = null!;
 
         [ForeignKey(nameof(OwnerId))]
@@ -20,7 +21,7 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         public string OwnerId { get; set; } = null!;
 
         [Required]
-        [Precision(18, 2)]
+        [Precision(OfferPriceMaxLength, OfferPriceMinLength)]
         public decimal Price { get; set; }
 
         public bool? IsAccepted { get; set; } = null;

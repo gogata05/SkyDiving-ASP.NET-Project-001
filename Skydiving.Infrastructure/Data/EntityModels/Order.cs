@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static Skydiving.Infrastructure.Data.DataConstants.EntityConstants.Order;
 
 namespace Skydiving.Infrastructure.Data.EntityModels
 {
@@ -31,7 +32,7 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         public DateTime? CompletedOn { get; set; }
 
         [Required]
-        [Precision(18, 2)]
+        [Precision(OrderTotalCostMaxLength, OrderTotalCostMinLength)]
         public decimal TotalCost { get; set; }
     }
 }

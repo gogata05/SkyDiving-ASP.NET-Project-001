@@ -39,13 +39,13 @@ namespace Skydiving.Infrastructure.Data
         {
             //Remove comment to seed the DB(Comment to start Unit tests)
 
-            //builder.ApplyConfiguration(new UserConfiguration());
-            //builder.ApplyConfiguration(new RoleConfiguration());
-            //builder.ApplyConfiguration(new UserRoleConfiguration());
-            //builder.ApplyConfiguration(new JumpStatusConfiguration());
-            //builder.ApplyConfiguration(new JumpCategoryConfiguration());
-            //builder.ApplyConfiguration(new EquipmentCategoryConfiguration());
-            //builder.ApplyConfiguration(new EquipmentConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new UserRoleConfiguration());
+            builder.ApplyConfiguration(new JumpStatusConfiguration());
+            builder.ApplyConfiguration(new JumpCategoryConfiguration());
+            builder.ApplyConfiguration(new EquipmentCategoryConfiguration());
+            builder.ApplyConfiguration(new EquipmentConfiguration());
 
             //Remove comment to seed the DB(Comment to start Unit tests)
 

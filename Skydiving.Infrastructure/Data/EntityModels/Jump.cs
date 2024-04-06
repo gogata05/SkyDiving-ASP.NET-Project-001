@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using static Skydiving.Infrastructure.Data.DataConstants.EntityConstants.Jump;
 
 namespace Skydiving.Infrastructure.Data.EntityModels
 {
@@ -9,7 +10,7 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         public int Id { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(JumpTitleMaxLength)]
         public string Title { get; set; } = null!;
 
         [Required]
@@ -19,7 +20,7 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         public JumpCategory Category { get; set; } = null!;
 
         [Required]
-        [StringLength(500)]
+        [StringLength(JumpDescriptionMaxLength)]
         public string Description { get; set; } = null!;//Address
 
         [Required]
@@ -28,7 +29,7 @@ namespace Skydiving.Infrastructure.Data.EntityModels
         [ForeignKey(nameof(OwnerId))]
         public User Owner { get; set; } = null!;
 
-        [StringLength(50)]
+        [StringLength(JumpOwnerNameMaxLength)]
         public string? OwnerName { get; set; }
 
         public string? InstructorId { get; set; }
