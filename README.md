@@ -7,8 +7,14 @@ SoftUni ASP.NET Advanced April 2024 Project Defence
 SkyDiving is application for creating/accepting jumps requests and for buying skydiving equipment.
 
 ## Features
-- Google Maps with Econt offices in the cart view
-- Live Support chat added for support user/admin
+- Google Maps Geolocation with Econt offices in the cart view
+- Live Support SignalR chat added for support user/admin
+- Custom Roles
+- Star Rate system
+- Slide Arrows Recent Posts
+- App statistics
+- Toastr notifications
+- Pace load progress bars
 
 ### User Roles
 - **Jumper**: Upon registration, can Add, Edit, Access All Jumps, View My Jumps, Accept/Decline offers, Search, Use Live support Chat, View their orders, Buy equipment, Rate the instructor with stars
@@ -56,11 +62,11 @@ SkyDiving is application for creating/accepting jumps requests and for buying sk
 - 1.Open Skydiving.sln with visual studio 2022
 - 2.In appsetting.json add your personal "ConnectionStrings"
 - 3.right click on Skydiving Project and "Set as Startup Project"
-- 4.In "Package Manager Console" with Default project: "Skydiving.Infastructure" type: update database
+- 4.In "Package Manager Console" with Default project: "Skydiving.Infastructure" type: update-database
 - 5.Ctrl+F5
 - 6.Open Url localhost on your browser: https://localhost:7160/
 - 7.Enjoy!
-
+- To Run the Unit Tests comment the seed data in ApplicationDbContext.cs
 
 ## Used libraries:
     - `SignalR` - for realtime live chat
